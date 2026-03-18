@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Dark golden theme - always dark */
+    --background: 0.09 0 0;
+    --foreground: 0.94 0 0;
+    --card: 0.15 0.003 260;
+    --card-foreground: 0.94 0 0;
+    --popover: 0.18 0.003 260;
+    --popover-foreground: 0.94 0 0;
+    --primary: 0.75 0.1 80;
+    --primary-foreground: 0.09 0 0;
+    --secondary: 0.2 0.003 260;
+    --secondary-foreground: 0.94 0 0;
+    --muted: 0.18 0.003 260;
+    --muted-foreground: 0.72 0 0;
+    --accent: 0.86 0.08 90;
+    --accent-foreground: 0.09 0 0;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.22 0 0;
+    --input: 0.18 0.003 260;
+    --ring: 0.75 0.1 80;
+    --chart-1: 0.646 0.222 41.116;
+    --chart-2: 0.6 0.118 184.704;
+    --chart-3: 0.398 0.07 227.392;
+    --chart-4: 0.828 0.189 84.429;
+    --chart-5: 0.769 0.188 70.08;
+    --sidebar: 0.15 0.003 260;
+    --sidebar-foreground: 0.94 0 0;
+    --sidebar-primary: 0.75 0.1 80;
+    --sidebar-primary-foreground: 0.09 0 0;
+    --sidebar-accent: 0.2 0.003 260;
+    --sidebar-accent-foreground: 0.94 0 0;
+    --sidebar-border: 0.22 0 0;
+    --sidebar-ring: 0.75 0.1 80;
+
+    /* Custom gold vars */
+    --gold: 0.75 0.1 80;
+    --gold-bright: 0.86 0.08 90;
+    --gold-dark: 0.65 0.11 75;
+    --surface: 0.15 0.003 260;
+    --surface-2: 0.2 0.003 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gold {
+    color: oklch(var(--gold));
+  }
+  .text-gold-bright {
+    color: oklch(var(--gold-bright));
+  }
+  .bg-gold {
+    background-color: oklch(var(--gold));
+  }
+  .bg-gold-dark {
+    background-color: oklch(var(--gold-dark));
+  }
+  .border-gold {
+    border-color: oklch(var(--gold));
+  }
+  .bg-surface {
+    background-color: oklch(var(--surface));
+  }
+  .bg-surface-2 {
+    background-color: oklch(var(--surface-2));
+  }
+  .gold-gradient {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--gold-dark)),
+      oklch(var(--gold)),
+      oklch(var(--gold-bright)),
+      oklch(var(--gold))
+    );
+  }
+  .text-gradient-gold {
+    background: linear-gradient(
+      135deg,
+      oklch(var(--gold)),
+      oklch(var(--gold-bright))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
