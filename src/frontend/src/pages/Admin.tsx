@@ -15,16 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, LogIn, LogOut, RefreshCw } from "lucide-react";
+import { LogIn, LogOut, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 import { Status } from "../backend";
 import type { Order } from "../backend";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
-import {
-  useGetOrders,
-  useGetVisitCount,
-  useUpdateOrderStatus,
-} from "../hooks/useQueries";
+import { useGetOrders, useUpdateOrderStatus } from "../hooks/useQueries";
 
 const SKELETON_KEYS = ["sk-1", "sk-2", "sk-3", "sk-4", "sk-5"];
 
@@ -91,7 +87,6 @@ export function Admin() {
   const { login, clear, identity, isLoggingIn } = useInternetIdentity();
   const isAuthenticated = !!identity;
   const { data: orders, isLoading: ordersLoading, refetch } = useGetOrders();
-  const { data: visitCount } = useGetVisitCount();
 
   return (
     <div className="min-h-screen bg-background">
@@ -108,17 +103,6 @@ export function Admin() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            {visitCount !== undefined && (
-              <div
-                data-ocid="admin.panel"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span className="text-xs font-semibold">
-                  {Number(visitCount).toLocaleString()} visitors
-                </span>
-              </div>
-            )}
             {isAuthenticated && (
               <span className="text-xs text-muted-foreground font-mono">
                 {identity?.getPrincipal().toString().slice(0, 12)}...
@@ -197,25 +181,6 @@ export function Admin() {
                 <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                 Refresh
               </Button>
-            </div>
-
-            {/* Visitor Stats Card */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-surface border border-amber-500/20 rounded-lg p-4 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/25 flex items-center justify-center flex-shrink-0">
-                  <Eye className="w-5 h-5 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                    Total Visitors
-                  </p>
-                  <p className="text-2xl font-display font-extrabold text-amber-400">
-                    {visitCount !== undefined
-                      ? Number(visitCount).toLocaleString()
-                      : "—"}
-                  </p>
-                </div>
-              </div>
             </div>
 
             {ordersLoading ? (

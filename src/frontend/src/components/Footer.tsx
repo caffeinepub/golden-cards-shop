@@ -1,16 +1,50 @@
-import { ExternalLink, Eye } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SiFacebook, SiInstagram, SiX } from "react-icons/si";
-import { useGetVisitCount } from "../hooks/useQueries";
+import { useActor } from "../hooks/useActor";
+
+function VisitorCounter() {
+  const { actor } = useActor();
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!actor) return;
+    let cancelled = false;
+    async function run() {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const a = actor as any;
+        await a.recordVisit();
+        const c = await a.getVisitCount();
+        if (!cancelled) setCount(Number(c));
+      } catch {
+        // silently ignore - never crash the page
+      }
+    }
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [actor]);
+
+  if (count === null) return null;
+
+  return (
+    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block" />
+      <span>{count.toLocaleString()} visitors</span>
+    </div>
+  );
+}
 
 export function Footer() {
   const year = new Date().getFullYear();
   const hostname = encodeURIComponent(window.location.hostname);
   const caffeineUrl = `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${hostname}`;
-  const { data: visitCount } = useGetVisitCount();
 
   const shopLinks = [
     "All Cards",
-    "Pokémon Series",
+    "Pok\u00e9mon Series",
     "Naruto Series",
     "New Arrivals",
     "Best Sellers",
@@ -32,7 +66,6 @@ export function Footer() {
     <footer className="bg-card border-t border-border">
       <div className="max-w-[1200px] mx-auto px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-          {/* Brand */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded gold-gradient flex items-center justify-center">
@@ -62,7 +95,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Shop */}
           <div>
             <h4 className="font-display font-bold text-xs uppercase tracking-widest text-gold mb-4">
               Shop
@@ -81,7 +113,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h4 className="font-display font-bold text-xs uppercase tracking-widest text-gold mb-4">
               Support
@@ -100,7 +131,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Payment/Pickup */}
           <div>
             <h4 className="font-display font-bold text-xs uppercase tracking-widest text-gold mb-4">
               Pickup
@@ -129,19 +159,9 @@ export function Footer() {
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <p className="text-xs text-muted-foreground">
-              © {year} Golden Cards. All rights reserved.
+              &copy; {year} Golden Cards. All rights reserved.
             </p>
-            {visitCount !== undefined && (
-              <div
-                data-ocid="footer.panel"
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400"
-              >
-                <Eye className="w-3 h-3" />
-                <span className="text-xs font-semibold">
-                  {Number(visitCount).toLocaleString()} visitors
-                </span>
-              </div>
-            )}
+            <VisitorCounter />
           </div>
           <a
             href={caffeineUrl}
