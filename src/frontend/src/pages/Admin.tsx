@@ -15,10 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LogIn, LogOut, RefreshCw } from "lucide-react";
+import { Eye, LogIn, LogOut, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { Status } from "../backend";
 import type { Order } from "../backend";
+import { useActor } from "../hooks/useActor";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 import { useGetOrders, useUpdateOrderStatus } from "../hooks/useQueries";
 
@@ -33,6 +35,54 @@ const STATUS_COLORS: Record<Status, string> = {
 
 function formatPrice(cents: bigint): string {
   return `NPR ${(Number(cents) / 100).toFixed(0)}`;
+}
+
+function VisitorCountCard() {
+  const { actor } = useActor();
+  const [count, setCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!actor) return;
+    let cancelled = false;
+    async function fetchCount() {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const a = actor as any;
+        const c = await a.getVisitCount();
+        if (!cancelled) {
+          setCount(Number(c));
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchCount();
+    return () => {
+      cancelled = true;
+    };
+  }, [actor]);
+
+  return (
+    <div className="bg-surface rounded-lg border border-border p-5 flex items-center gap-4">
+      <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">
+        <Eye className="w-5 h-5 text-gold" />
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-0.5">
+          Total Visitors
+        </p>
+        {loading ? (
+          <Skeleton className="h-6 w-16 bg-surface-2" />
+        ) : (
+          <p className="text-2xl font-display font-bold text-gold">
+            {count !== null ? count.toLocaleString() : "—"}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function OrderRow({ order, index }: { order: Order; index: number }) {
@@ -182,6 +232,8 @@ export function Admin() {
                 Refresh
               </Button>
             </div>
+
+            <VisitorCountCard />
 
             {ordersLoading ? (
               <div
