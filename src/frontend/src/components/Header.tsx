@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Heart, ShoppingCart, User } from "lucide-react";
+import { Heart, Settings, ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
 import { useCart } from "../context/CartContext";
 
@@ -74,9 +74,10 @@ export function Header({ onCartOpen, activeSection, onNavClick }: HeaderProps) {
             type="button"
             data-ocid="nav.link"
             onClick={goToAdmin}
-            className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-surface-2"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gold border border-gold/40 rounded-md hover:bg-gold/10 transition-colors"
           >
-            <User className="w-5 h-5" />
+            <Settings className="w-3.5 h-3.5" />
+            Admin Panel
           </button>
           <button
             type="button"
