@@ -103,7 +103,7 @@ export function Home({ onShopNow }: HomeProps) {
             <div className="flex flex-wrap gap-4 mt-2">
               {[
                 { icon: CreditCard, text: "Cash on Delivery" },
-                { icon: Truck, text: "Free Shipping" },
+                { icon: Truck, text: "Paid Delivery - Gulariya" },
                 { icon: Shield, text: "Authentic Cards" },
               ].map(({ icon: Icon, text }) => (
                 <div
@@ -247,8 +247,8 @@ export function Home({ onShopNow }: HomeProps) {
               },
               {
                 icon: Truck,
-                title: "Free Shipping",
-                desc: "Free delivery on all orders. Tracked and insured.",
+                title: "Paid Delivery in Gulariya",
+                desc: "Delivery available to Gulariya. Delivery fee applies.",
               },
               {
                 icon: Shield,

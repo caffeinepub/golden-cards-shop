@@ -1,10 +1,11 @@
 import { Toaster } from "@/components/ui/sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CartDrawer } from "./components/CartDrawer";
 import { CheckoutModal } from "./components/CheckoutModal";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { CartProvider } from "./context/CartContext";
+import { useActor } from "./hooks/useActor";
 import { Admin } from "./pages/Admin";
 import { Home } from "./pages/Home";
 
@@ -16,6 +17,22 @@ function useRouterPath() {
     return () => window.removeEventListener("popstate", handler);
   }, []);
   return path;
+}
+
+function VisitRecorder() {
+  const { actor, isFetching } = useActor();
+  const recorded = useRef(false);
+
+  useEffect(() => {
+    if (actor && !isFetching && !recorded.current) {
+      recorded.current = true;
+      (actor as any).recordVisit().catch(() => {
+        // silently ignore errors
+      });
+    }
+  }, [actor, isFetching]);
+
+  return null;
 }
 
 export default function App() {
@@ -36,6 +53,7 @@ export default function App() {
   if (isAdmin) {
     return (
       <CartProvider>
+        <VisitRecorder />
         <Admin />
         <Toaster />
       </CartProvider>
@@ -44,6 +62,7 @@ export default function App() {
 
   return (
     <CartProvider>
+      <VisitRecorder />
       <div className="min-h-screen flex flex-col bg-background">
         <Header
           onCartOpen={() => setCartOpen(true)}

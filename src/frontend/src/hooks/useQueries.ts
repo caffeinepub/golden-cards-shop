@@ -38,6 +38,18 @@ export function useIsAdmin() {
   });
 }
 
+export function useGetVisitCount() {
+  const { actor, isFetching } = useActor();
+  return useQuery<bigint>({
+    queryKey: ["visitCount"],
+    queryFn: async () => {
+      if (!actor) return BigInt(0);
+      return (actor as any).getVisitCount() as Promise<bigint>;
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
 export function useCreateOrder() {
   const { actor } = useActor();
   const queryClient = useQueryClient();

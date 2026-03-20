@@ -56,6 +56,15 @@ actor {
   let products = Map.empty<Nat, Product.Product>();
   let orders = Map.empty<Nat, Order.Order>();
   var nextOrderId = 1;
+  stable var visitCount : Nat = 0;
+
+  public shared func recordVisit() : async () {
+    visitCount += 1;
+  };
+
+  public query func getVisitCount() : async Nat {
+    visitCount;
+  };
 
   public shared ({ caller }) func initialize() : async () {
     if (products.size() > 0) {

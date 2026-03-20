@@ -1,10 +1,12 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Eye } from "lucide-react";
 import { SiFacebook, SiInstagram, SiX } from "react-icons/si";
+import { useGetVisitCount } from "../hooks/useQueries";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const hostname = encodeURIComponent(window.location.hostname);
   const caffeineUrl = `https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${hostname}`;
+  const { data: visitCount } = useGetVisitCount();
 
   const shopLinks = [
     "All Cards",
@@ -125,9 +127,22 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">
-            © {year} Golden Cards. All rights reserved.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-muted-foreground">
+              © {year} Golden Cards. All rights reserved.
+            </p>
+            {visitCount !== undefined && (
+              <div
+                data-ocid="footer.panel"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400"
+              >
+                <Eye className="w-3 h-3" />
+                <span className="text-xs font-semibold">
+                  {Number(visitCount).toLocaleString()} visitors
+                </span>
+              </div>
+            )}
+          </div>
           <a
             href={caffeineUrl}
             target="_blank"

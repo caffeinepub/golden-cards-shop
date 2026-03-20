@@ -63,4 +63,6 @@ export interface backendInterface {
     initialize(): Promise<void>;
     isCallerAdmin(): Promise<boolean>;
     updateOrderStatus(orderId: bigint, status: Status): Promise<void>;
+    recordVisit(): Promise<void>;
+    getVisitCount(): Promise<bigint>;
 }
